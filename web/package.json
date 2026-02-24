@@ -1,0 +1,12 @@
+{
+  "name": "cobol-bank-ledger-web",
+  "version": "1.0.0",
+  "description": "Web GUI for the COBOL Bank Ledger",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}

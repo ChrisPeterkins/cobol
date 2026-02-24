@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COBOL Bank Ledger</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="scanline-overlay"></div>
+
+  <header>
+    <div class="header-bar">
+      <h1>COBOL BANK LEDGER</h1>
+      <div class="header-controls">
+        <button id="btn-seed" class="btn btn-system" title="Load seed data">SEED DATA</button>
+        <button id="btn-terminal" class="btn btn-dim" title="Toggle terminal">TERMINAL</button>
+      </div>
+    </div>
+    <nav>
+      <a href="#/accounts" class="nav-tab active" data-route="accounts">ACCOUNTS</a>
+      <a href="#/transactions" class="nav-tab" data-route="transactions">TRANSACTIONS</a>
+      <a href="#/reports" class="nav-tab" data-route="reports">REPORTS</a>
+    </nav>
+  </header>
+
+  <main id="app"></main>
+
+  <div id="terminal-panel" class="terminal-panel hidden">
+    <div class="terminal-header">
+      <span>RAW COBOL OUTPUT</span>
+      <button id="btn-terminal-close" class="btn btn-dim btn-sm">CLOSE</button>
+    </div>
+    <pre id="terminal-output"></pre>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-actions">
+        <button id="modal-confirm" class="btn btn-danger">CONFIRM</button>
+        <button id="modal-cancel" class="btn btn-dim">CANCEL</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/views/accounts.js"></script>
+  <script src="/js/views/transactions.js"></script>
+  <script src="/js/views/reports.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

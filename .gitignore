@@ -3,3 +3,4 @@ data/*.dat
 data/*.tmp
 *.tmp
 .claude/
+node_modules/
