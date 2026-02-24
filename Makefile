@@ -3,7 +3,7 @@ FLAGS = -x -I copybooks -std=default
 SRC = src
 BIN = bin
 
-PROGRAMS = acctmgr txnproc dayend rptgen seedload
+PROGRAMS = acctmgr txnproc dayend rptgen seedload bankui
 
 all: $(addprefix $(BIN)/,$(PROGRAMS))
 
@@ -21,4 +21,7 @@ cleandata:
 
 reset: clean cleandata
 
-.PHONY: all clean cleandata reset
+test: all
+	./tests/test-suite.sh
+
+.PHONY: all clean cleandata reset test

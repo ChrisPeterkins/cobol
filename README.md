@@ -40,9 +40,12 @@ Cobol/
 ├── src/                  # COBOL source programs
 │   ├── acctmgr.cbl       # Account manager (interactive)
 │   ├── txnproc.cbl       # Transaction processor (interactive)
+│   ├── bankui.cbl        # TUI frontend (SCREEN SECTION)
 │   ├── dayend.cbl         # End-of-day reconciliation (batch)
 │   ├── rptgen.cbl         # Report generator (batch)
 │   └── seedload.cbl       # Seed data loader
+├── tests/                # Automated tests
+│   └── test-suite.sh     # Integration test suite (~53 tests)
 ├── data/                 # Runtime data files (generated)
 │   ├── ACCOUNTS.dat       # Indexed account master file
 │   └── TRANSACTIONS.dat   # Sequential transaction log
@@ -79,6 +82,18 @@ Generates formatted account statements:
 - Accepts account number and date range
 - Shows opening balance, each transaction with running balance, and closing balance
 - Formatted with PIC editing for currency display
+
+### BANKUI — Terminal User Interface
+Green-screen TUI that combines account management and transaction processing into a single application using COBOL's `SCREEN SECTION`:
+- **Main Menu**: 7 operations in a box-drawn layout (create/lookup/list/close + deposit/withdraw/transfer)
+- **Function Keys**: F3=Back, F7/F8=Page, F12=Quit
+- **Color Theme**: Green-on-black with cyan input fields, blue status bar
+
+```bash
+./bin/bankui
+```
+
+Requires a terminal with ncurses support (any modern terminal emulator works).
 
 ## Demo Workflow
 
@@ -119,6 +134,10 @@ make all
 | Control break processing | DAYEND |
 | PIC editing (Z, $, -, etc.) | RPTGEN |
 | ACCEPT/DISPLAY | ACCTMGR, TXNPROC |
+| SCREEN SECTION | BANKUI |
+| SPECIAL-NAMES / CRT STATUS | BANKUI |
+| FOREGROUND-COLOR / BACKGROUND-COLOR | BANKUI |
+| USING / FROM (screen binding) | BANKUI |
 | EVALUATE (case/switch) | All programs |
 | STRING/UNSTRING | Date formatting |
 | FILE STATUS codes | All programs |
@@ -128,6 +147,7 @@ make all
 
 ```bash
 make all        # Build all programs
+make test       # Build and run integration tests
 make clean      # Remove compiled binaries
 make cleandata  # Remove data files
 make reset      # Remove both binaries and data
@@ -139,3 +159,29 @@ make reset      # Remove both binaries and data
 - **TRANSACTIONS.dat**: Sequential file. 71-byte fixed-width records appended chronologically.
 
 Both files are created automatically when first needed.
+
+## Testing
+
+The project includes an automated integration test suite that validates the full workflow:
+
+```bash
+# Run all tests
+make test
+
+# Or run directly
+./tests/test-suite.sh
+```
+
+The test suite covers 6 phases with ~53 test cases:
+
+| Phase | What's Verified |
+|---|---|
+| 0. Build | `make clean && make all`, all 6 binaries exist |
+| 1. Seed Data | seedload creates 5 accounts, acctmgr list confirms |
+| 2. Account Mgmt | Create, lookup, lookup nonexistent, list count |
+| 3. Transactions | Deposit, withdraw, overdraft rejection, transfer, closed account rejection |
+| 4. Day-End | Reconciliation passes, daily summary, no discrepancies |
+| 5. Report Gen | Statement header/footer, account name, transaction descriptions |
+| 6. Closure | Close account, verify closed, re-close rejected |
+
+Tests use the `printf | ./bin/program` pattern to drive interactive programs with piped input. Output is color-coded (green=pass, red=fail).
